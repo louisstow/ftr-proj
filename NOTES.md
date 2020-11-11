@@ -1,5 +1,21 @@
 I built this solution with the principles of Dependency Injection and MVC in mind. By passing through dependencies it allows for simpler testing (mocking dependencies) as well as replacing dependencies that adhere to the same interface.
 
+# Instructions
+
+To run the application:
+
+```
+npm install
+npm run build
+npm run start
+```
+
+To run the tests:
+
+```
+npm run test
+```
+
 # Replacing User Interface
 
 Replacing the user interface is straight forward by re-using the Controller and StateManager and creating a new View. The CLI class is an example of a View. If we wanted to replace it with a web interface you would only need to initialise the dependencies then pass them into a Controller instance which a View could then use to achieve the same business logic.
