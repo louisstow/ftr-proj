@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "FTR coding exercise",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=14.5.0"
+  },
   "scripts": {
     "build": "tsc --build tsconfig.prod.json",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "start": "node dist/"
   },
   "author": "Louis Stowasser",
   "license": "ISC",

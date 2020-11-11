@@ -48,6 +48,7 @@ class CLI {
   }
 
   private handleQuit() {
+    this.showFrequency();
     this.printLine("Thanks for playing.");
     this.rl.close();
     process.exit(0);
