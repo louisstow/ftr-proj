@@ -18,6 +18,7 @@ const mockController = {
   resume: jest.fn(),
   enterNumber: jest.fn(),
   enterInterval: jest.fn(),
+  getFrequencyStatus: jest.fn(),
 };
 
 const mockStateManager = {
