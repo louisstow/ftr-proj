@@ -9,11 +9,11 @@ class StateManager {
     this.state = new NeedsIntervalState();
   }
 
-  handleInput(controller: Controller, line: string) {
+  public handleInput(controller: Controller, line: string) {
     this.state = this.state.handleInput(controller, line);
   }
 
-  prompt() {
+  public prompt() {
     return this.state.prompt();
   }
 }

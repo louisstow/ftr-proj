@@ -25,7 +25,7 @@ class Controller extends EventEmitter {
     this.fibonacci = new Fibonacci(1000);
   }
 
-  getFrequencyStatus() {
+  public getFrequencyStatus() {
     const entries = this.frequency.getInDescendingOrder();
     if (entries.length === 0) {
       return "";
@@ -34,19 +34,19 @@ class Controller extends EventEmitter {
     return entries.map((entry) => `${entry[0]}:${entry[1]}`).join(", ");
   }
 
-  halt() {
+  public halt() {
     this.timer.halt();
   }
 
-  resume() {
+  public resume() {
     this.timer.resume();
   }
 
-  isTimerRunning() {
+  public isTimerRunning() {
     return this.timer.isRunning();
   }
 
-  enterNumber(line: string) {
+  public enterNumber(line: string) {
     try {
       const number = BigInt(line);
       this.frequency.add(number);
@@ -61,7 +61,7 @@ class Controller extends EventEmitter {
     }
   }
 
-  enterInterval(line: string) {
+  public enterInterval(line: string) {
     if (!line.length) {
       return false;
     }

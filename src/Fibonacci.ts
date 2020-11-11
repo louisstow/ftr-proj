@@ -16,13 +16,13 @@ class Fibonacci {
     this.generate(upTo);
   }
 
-  generate(upTo: number) {
+  public generate(upTo: number) {
     for (let i of fibonacciGenerator(upTo)) {
       this.map.add(i);
     }
   }
 
-  isFib(n: BigInt) {
+  public isFib(n: BigInt) {
     // specification of Set requires sublinear time for has()
     return this.map.has(n);
   }
