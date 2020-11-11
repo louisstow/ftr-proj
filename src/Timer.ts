@@ -26,7 +26,7 @@ class Timer extends EventEmitter {
 
   public resume() {
     if (this.interval === undefined) {
-      throw new Error("Must specify an interval in seconds");
+      throw new Error("Please specify an interval in seconds");
     }
 
     if (this.isRunning()) {

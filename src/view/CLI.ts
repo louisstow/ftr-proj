@@ -47,7 +47,7 @@ class CLI {
       this.controller.resume();
       this.printLine("timer resumed");
     } catch (err) {
-      this.printLine("timer halted");
+      this.printLine(err.message);
     }
   }
 
