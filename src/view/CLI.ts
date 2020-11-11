@@ -1,7 +1,7 @@
 import readline from "readline";
 
 import { Controller, ControllerEvent } from "../Controller";
-import { StateManager } from "../State";
+import type { StateManager } from "../StateManager";
 
 class CLI {
   controller: Controller;
@@ -21,39 +21,39 @@ class CLI {
     controller.on(ControllerEvent.FIB, () => this.printLine("FIB"));
   }
 
-  printLine(line: string) {
+  private printLine(line: string) {
     console.log(">>", line);
   }
 
-  showFrequency() {
+  public showFrequency() {
     const status = this.controller.getFrequencyStatus();
     if (status) {
       this.printLine(status);
     }
   }
 
-  showPrompt() {
+  public showPrompt() {
     const prompt = this.state.prompt();
     this.rl.question(`>> ${prompt}\n`, (answer) => this.handleInput(answer));
   }
 
-  handleHalt() {
+  private handleHalt() {
     this.printLine("timer halted");
     this.controller.halt();
   }
 
-  handleResume() {
+  private handleResume() {
     this.printLine("timer resumed");
     this.controller.resume();
   }
 
-  handleQuit() {
+  private handleQuit() {
     this.printLine("Thanks for playing.");
     this.rl.close();
     process.exit(0);
   }
 
-  handleInput(answer: string) {
+  private handleInput(answer: string) {
     switch (answer) {
       case "halt":
         this.handleHalt();

@@ -2,9 +2,9 @@ I built this solution with the principles of Dependency Injection and MVC in min
 
 # Replacing User Interface
 
-Replacing the user interface is straight forward by re-using the controller and creating a new View. The CLI class is an example of a View. If we wanted to replace it with a web interface you would only need to initialise the dependencies then pass them into a Controller instance which a View could then use to achieve the same business logic.
+Replacing the user interface is straight forward by re-using the Controller and StateManager and creating a new View. The CLI class is an example of a View. If we wanted to replace it with a web interface you would only need to initialise the dependencies then pass them into a Controller instance which a View could then use to achieve the same business logic.
 
-Generic application state management was not implemented as there are few application states (first number, next number) but could be a further addition. I would implement this using the [State Pattern](https://gameprogrammingpatterns.com/state.html).
+I used the State Pattern to manage application state which can be shared across any implementation of a user inteface. See an example of a React web interface using these re-usable classes in `example_web_view.ts`. The StateManager class knows how to handle input and which states to transition. This method allows us to replace the user interface but also increase complexity of application state without heavy rewrites.
 
 # Production Readiness
 
@@ -12,7 +12,7 @@ To make this application production ready you would need to start with a CI/CD p
 
 This project has good test coverage through unit tests but we would also want to build integration and end-to-end tests. Integration tests assert that the components function when used together while E2E tests prove the user can achieve their intended goals by replicating user actions as close as possible.
 
-I believe code can and should be self-documenting with well principled coding standards. However we would still want to document processes, patterns, assumptions and instructions. This can be included in version control and be part of the CI/CD pipeline.
+I believe code can and should be self-documenting with well principled coding standards. However we would still want to document processes, patterns, assumptions and instructions. This can be included in version control and be part of the CI/CD build pipeline.
 
 # Assumptions
 

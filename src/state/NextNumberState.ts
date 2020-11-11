@@ -1,14 +1,18 @@
-import { Controller, ControllerEvent, Response } from "../Controller";
+import {
+  Controller,
+  ControllerEvent,
+  NumberEntryResponse,
+} from "../Controller";
 import { BaseState } from "./BaseState";
 
-class NextNumberState extends BaseState {
+class NextNumberState implements BaseState {
   prompt() {
-    return "Please enter the first number";
+    return "Please enter the next number";
   }
 
   handleInput(controller: Controller, line: string) {
     const response = controller.enterNumber(line);
-    if (response === Response.FIB) {
+    if (response === NumberEntryResponse.FIB) {
       controller.emit(ControllerEvent.FIB);
     }
     return this;

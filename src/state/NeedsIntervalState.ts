@@ -2,7 +2,7 @@ import type { Controller } from "../Controller";
 import { BaseState } from "./BaseState";
 import { FirstNumberState } from "./FirstNumberState";
 
-class NeedsIntervalState extends BaseState {
+class NeedsIntervalState implements BaseState {
   prompt() {
     return "Please input the number of time in seconds between emitting numbers and their frequency";
   }

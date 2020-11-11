@@ -1,135 +1,111 @@
 import { CLI } from "./CLI";
-import { Response } from "../Controller";
+import { NumberEntryResponse } from "../Controller";
 
 const spy = jest.spyOn(console, "log");
 
 // @ts-ignore
 const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
 
-const mockReadlineSimple = {
+const mockReadline = {
   question: jest.fn(),
   close: jest.fn(),
   on: jest.fn(),
 };
 
+const mockController = {
+  on: jest.fn(),
+  halt: jest.fn(),
+  resume: jest.fn(),
+  enterNumber: jest.fn(),
+  enterInterval: jest.fn(),
+};
+
+const mockStateManager = {
+  prompt: jest.fn(),
+  handleInput: jest.fn(),
+};
+
 test("Printing lines", () => {
-  const mockController = {
+  const controller = {
+    ...mockController,
     getFrequencyStatus: jest.fn().mockImplementation(() => "status"),
   };
 
   // @ts-ignore
-  const cli = new CLI(mockController, mockReadlineSimple);
-
-  cli.printLine("x");
-  expect(spy).toBeCalledWith(">>", "x");
+  const cli = new CLI(controller, mockReadline, mockStateManager);
 
   cli.showFrequency();
-  expect(mockController.getFrequencyStatus).toBeCalled();
+  expect(controller.getFrequencyStatus).toBeCalled();
   expect(spy).toHaveBeenLastCalledWith(">>", "status");
 });
 
-test("Requesting interval failed", () => {
-  const mockIntervalResponse = "0";
-  const mockController = {
-    enterInterval: jest.fn().mockReturnValue(false),
-    resume: jest.fn(),
+test("showPrompt", () => {
+  const stateManager = {
+    ...mockStateManager,
+    prompt: jest.fn().mockReturnValue("PROMPT"),
   };
-
-  const mockReadline = {
-    question: jest.fn().mockImplementationOnce((q, callback) => {
-      callback(mockIntervalResponse);
-    }),
-    on: jest.fn(),
-  };
-
   // @ts-ignore
-  const cli = new CLI(mockController, mockReadline);
+  const cli = new CLI(mockController, mockReadline, stateManager);
 
-  cli.requestInterval();
-  expect(mockController.enterInterval).toBeCalledWith(mockIntervalResponse);
-  expect(mockReadline.question).toBeCalled();
-  expect(mockController.resume).not.toBeCalled();
+  cli.showPrompt();
+  expect(mockReadline.question).toBeCalledWith(
+    ">> PROMPT\n",
+    expect.any(Function)
+  );
 });
 
-test("Requesting interval succeed", () => {
-  const mockIntervalResponse = "5";
-  const mockController = {
-    enterInterval: jest.fn().mockReturnValue(true),
-    resume: jest.fn(),
-  };
-
-  const mockReadline = {
-    question: jest.fn().mockImplementationOnce((q, callback) => {
-      callback(mockIntervalResponse);
-    }),
-    on: jest.fn(),
+test("handleHalt", () => {
+  const fn = "halt";
+  const readline = {
+    ...mockReadline,
+    question: jest.fn().mockImplementationOnce((_, callback) => callback(fn)),
   };
 
   // @ts-ignore
-  const cli = new CLI(mockController, mockReadline);
+  const cli = new CLI(mockController, readline, mockStateManager);
+  cli.showPrompt();
 
-  cli.requestInterval();
-  expect(mockController.enterInterval).toBeCalledWith(mockIntervalResponse);
-  expect(mockReadline.question).toBeCalled();
+  expect(mockController.halt).toBeCalled();
+});
+
+test("handleResume", () => {
+  const fn = "resume";
+  const readline = {
+    ...mockReadline,
+    question: jest.fn().mockImplementationOnce((_, callback) => callback(fn)),
+  };
+
+  // @ts-ignore
+  const cli = new CLI(mockController, readline, mockStateManager);
+  cli.showPrompt();
+
   expect(mockController.resume).toBeCalled();
 });
 
-test("Requesting line", () => {
-  const mockLineResponse = "5";
-  const mockController = {
-    enterNumber: jest.fn(),
-  };
-
-  const mockReadline = {
-    question: jest.fn().mockImplementationOnce((q, callback) => {
-      callback(mockLineResponse);
-    }),
-    on: jest.fn(),
+test("handleQuit", () => {
+  const fn = "quit";
+  const readline = {
+    ...mockReadline,
+    question: jest.fn().mockImplementationOnce((_, callback) => callback(fn)),
   };
 
   // @ts-ignore
-  const cli = new CLI(mockController, mockReadline);
+  const cli = new CLI(mockController, readline, mockStateManager);
+  cli.showPrompt();
 
-  cli.requestLine();
-  expect(mockController.enterNumber).toHaveBeenCalledWith(mockLineResponse);
+  expect(readline.close).toBeCalled();
 });
 
-test("Handling line inputs", () => {
-  const mockController = {
-    enterNumber: jest.fn(),
-    halt: jest.fn(),
-    resume: jest.fn(),
+test("handle other input", () => {
+  const fn = "99";
+  const readline = {
+    ...mockReadline,
+    question: jest.fn().mockImplementationOnce((_, callback) => callback(fn)),
   };
 
   // @ts-ignore
-  const cli = new CLI(mockController, mockReadlineSimple);
+  const cli = new CLI(mockController, readline, mockStateManager);
+  cli.showPrompt();
 
-  cli.handleInput("5");
-  expect(mockController.enterNumber).toHaveBeenCalledWith("5");
-
-  cli.handleInput("halt");
-  expect(mockController.halt).toHaveBeenCalled();
-  expect(spy).toHaveBeenLastCalledWith(">>", "timer halted");
-
-  cli.handleInput("resume");
-  expect(mockController.resume).toHaveBeenCalled();
-  expect(spy).toHaveBeenLastCalledWith(">>", "timer resumed");
-
-  cli.handleInput("quit");
-  expect(mockReadlineSimple.close).toHaveBeenCalled();
-  expect(mockExit).toHaveBeenCalledWith(0);
-});
-
-test("Handling fib input", () => {
-  const mockController = {
-    enterNumber: jest.fn().mockReturnValue(Response.FIB),
-    halt: jest.fn(),
-    resume: jest.fn(),
-  };
-
-  // @ts-ignore
-  const cli = new CLI(mockController, mockReadlineSimple);
-
-  cli.handleInput("1");
-  expect(spy).toHaveBeenLastCalledWith(">>", "FIB");
+  expect(mockStateManager.handleInput).toBeCalled();
 });

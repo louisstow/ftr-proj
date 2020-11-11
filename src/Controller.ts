@@ -3,7 +3,7 @@ import { Timer } from "./Timer";
 import { Fibonacci } from "./Fibonacci";
 import { EventEmitter } from "events";
 
-enum Response {
+enum NumberEntryResponse {
   VALID,
   INVALID,
   FIB,
@@ -43,7 +43,7 @@ class Controller extends EventEmitter {
   }
 
   isTimerRunning() {
-    this.timer.isRunning();
+    return this.timer.isRunning();
   }
 
   enterNumber(line: string) {
@@ -52,12 +52,12 @@ class Controller extends EventEmitter {
       this.frequency.add(number);
 
       if (this.fibonacci.isFib(number)) {
-        return Response.FIB;
+        return NumberEntryResponse.FIB;
       }
 
-      return Response.VALID;
+      return NumberEntryResponse.VALID;
     } catch (err) {
-      return Response.INVALID;
+      return NumberEntryResponse.INVALID;
     }
   }
 
@@ -77,4 +77,4 @@ class Controller extends EventEmitter {
   }
 }
 
-export { Controller, Response, ControllerEvent };
+export { Controller, NumberEntryResponse, ControllerEvent };

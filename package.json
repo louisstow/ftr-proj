@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/react": "^16.9.56",
+    "react": "^17.0.1",
     "typescript": "^4.0.2"
   },
   "devDependencies": {

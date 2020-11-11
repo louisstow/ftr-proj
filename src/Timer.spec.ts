@@ -12,6 +12,7 @@ test("Basic interval", () => {
   expect(callback).not.toBeCalled();
 
   timer.resume();
+  expect(timer.isRunning()).toBe(true);
   jest.runOnlyPendingTimers();
 
   expect(callback).toBeCalled();

@@ -1,4 +1,4 @@
-import { Controller, Response } from "./Controller";
+import { Controller, NumberEntryResponse } from "./Controller";
 
 const mockTimer = {
   setInterval: jest.fn(),
@@ -14,9 +14,9 @@ test("Enter number", () => {
   // @ts-ignore
   const controller = new Controller(mockTimer, mockFreq);
 
-  expect(controller.enterNumber("56")).toBe(Response.VALID);
-  expect(controller.enterNumber("55")).toBe(Response.FIB);
-  expect(controller.enterNumber("no")).toBe(Response.INVALID);
+  expect(controller.enterNumber("56")).toBe(NumberEntryResponse.VALID);
+  expect(controller.enterNumber("55")).toBe(NumberEntryResponse.FIB);
+  expect(controller.enterNumber("no")).toBe(NumberEntryResponse.INVALID);
 
   expect(mockFreq.add).toBeCalledTimes(2);
 });
@@ -54,11 +54,16 @@ test("Frequency status", () => {
 });
 
 test("Halt and resume", () => {
+  const timer = {
+    ...mockTimer,
+    isRunning: jest.fn().mockReturnValue(true),
+  };
   // @ts-ignore
-  const controller = new Controller(mockTimer, mockFreq);
+  const controller = new Controller(timer, mockFreq);
   controller.halt();
   expect(mockTimer.halt).toBeCalled();
 
   controller.resume();
   expect(mockTimer.resume).toBeCalled();
+  expect(controller.isTimerRunning()).toBe(true);
 });
