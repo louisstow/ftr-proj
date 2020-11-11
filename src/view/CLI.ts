@@ -17,7 +17,7 @@ class CLI {
     this.rl = rl;
     this.state = state;
 
-    rl.on("SIGINT", () => process.exit(1));
+    rl.on("SIGINT", () => process.exit(0));
     controller.on(ControllerEvent.FIB, () => this.printLine("FIB"));
   }
 
@@ -43,8 +43,12 @@ class CLI {
   }
 
   private handleResume() {
-    this.printLine("timer resumed");
-    this.controller.resume();
+    try {
+      this.controller.resume();
+      this.printLine("timer resumed");
+    } catch (err) {
+      this.printLine("timer halted");
+    }
   }
 
   private handleQuit() {

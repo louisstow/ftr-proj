@@ -10,6 +10,7 @@ test("Basic interval", () => {
   timer.setInterval(1);
 
   expect(callback).not.toBeCalled();
+  expect(timer.getInterval()).toBe(1000);
 
   timer.resume();
   expect(timer.isRunning()).toBe(true);

@@ -12,6 +12,10 @@ class Timer extends EventEmitter {
     this.interval = intervalInSeconds * 1000;
   }
 
+  public getInterval() {
+    return this.interval;
+  }
+
   public isRunning() {
     return this.intervalId !== undefined;
   }
@@ -25,7 +29,7 @@ class Timer extends EventEmitter {
       throw new Error("Must specify an interval in seconds");
     }
 
-    if (this.intervalId) {
+    if (this.isRunning()) {
       throw new Error("Timer has already started");
     }
 
